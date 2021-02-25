@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="zxx">
-<!--Change the lang to "your language" here-->
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -74,29 +71,48 @@
         <div class="row">
             <div class="col-md-10 col-xs-12">
                 <div class="grid-view">
-                    <form action="/{{$edit['id']}}/update" method="post">
-                        @csrf
+                    <?php
+                        $id = $_GET['id'];
+                        $data = file_get_contents('data.json');
+                        $data_array = json_decode($data,true);
+                        $row = $data_array[$id];                
+                    ?>
+                    <form action="" method="post">
                         <div class="form-group">
                             <label>Nama Anda</label>
-                            <input type="text" class="form-control" name="author" value="{{$edit['author']}}">
+                            <input type="text" class="form-control" name="author" value="<?php echo $row['author']; ?>">
                         </div>
                         <div class="form-group">
                             <label>Judul Blog</label>
-                            <input type="text" class="form-control" name="title" value="{{$edit['title']}}">
+                            <input type="text" class="form-control" name="title" value="<?php echo $row['title']; ?>">
                         </div>
                         <div class="form-group">
                             <label>Content Blog</label>
-                            <textarea name="content" id=" editor1" class="textarea" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">{{$edit['content']}}</textarea>
+                            <textarea name="content" id=" editor1" class="textarea" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"><?php echo $row['content']; ?></textarea>
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input type="date" class="form-control" name="tanggal" value="{{$edit['tanggal']}}">
+                            <input type="date" class="form-control" name="tanggal" value="<?php echo $row['tanggal']; ?>">
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" name="save">Submit</button>
                         <a href="/">
                             <button type="button" class="btn btn-warning">Kembali</button>
                         </a>
                     </form>
+                    <?php
+                        if(isset($_POST['save'])){
+                            $data = array(
+                                'id' => $row['id'],
+                                'author' => $_POST['author'],
+                                'title' => $_POST['title'],
+                                'content' => $_POST['content'],
+                                'tanggal' => $_POST['tanggal']
+                            );
+                            $data_array[$id] = $data;
+                            $data = json_encode($data_array, JSON_PRETTY_PRINT);
+                            file_put_contents('data.json', $data);
+                        }
+                    ?>
                 </div>
             </div>
         </div>
