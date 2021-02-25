@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="zxx">
-<!--Change the lang to "your language" here-->
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -76,23 +73,28 @@
                 <div class="grid-view">
                     <div class=" row clearfix">
                         <!--Blog Container-->
-                        @foreach($data as $d)
+                        <?php
+                        $file = "data.json";
+                        $content = file_get_contents($file);
+                        $data = json_decode($content, true);
+                        $id = 0;
+                        foreach ($data as $d): ?>
                         <div class="blog-container col-sm-6 col-xs-12 os-animation cardku" data-os-animation="fadeInUp" data-os-animation-duration="4s">
                             <div class="inner-box">
                                 <div class="lower-content">
-                                    <h3><a href="/{{$d['id']}}/detail">{{$d['title']}}</a></h3>
+                                    <h3><a href="/{{$d['id']}}/detail"><?= $d['title']; ?></a></h3>
                                     <ul class="posted">
-                                        <li><i class="fa fa-calendar"></i>{{$d['tanggal']}}</li>
-                                        <li><i class="fa fa-user-o"></i>{{$d['author']}}</li>
+                                        <li><i class="fa fa-calendar"></i><?= $d['tanggal']; ?></li>
+                                        <li><i class="fa fa-user-o"></i><?= $d['author']; ?></li>
                                     </ul>
                                     <!--.posted-->
                                     <div class="text">
-                                        <span>{{ substr($d['content'],0,40).'....'}}</span><a href="/{{$d['id']}}/detail"><span>Lihat Selengkapnya</span></a>
+                                        <span><?= $d['content']; ?></span><a href="detail.php?id=<?=$d['id']?>"><span>Lihat Selengkapnya</span></a>
                                     </div>
-                                    <a href="/{{$d['id']}}/edit">
+                                    <a href="editblog.php?id=<?=$id?>">
                                         <button type="button" class="btn btn-primary">Edit</button>
                                     </a>
-                                    <a href="/{{$d['id']}}/delete">
+                                    <a href="delete.php?id=<?=$id?>">
                                         <button type="button" class="btn btn-danger">Delete</button>
                                     </a>
                                 </div>
@@ -100,7 +102,9 @@
                             </div>
                             <!--.inner-box-->
                         </div>
-                        @endforeach
+                        <?php 
+                        $id++;
+                        endforeach ?>
                         <!--.blog-container-->
                         <!--End Blog Container-->
                     </div>
